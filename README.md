@@ -49,14 +49,14 @@ Important note: In the above command I use the "*" character to view the Sample 
 
 * Prepare your working directory
 
-It is a good idea to keep your directories tidy and to name your files something that makes sence. This is just to keep things organized so you know what everything is several months from now. We are going to make a new directory to house all of the analyses for this tutorial.
+It is a good idea to keep your directories tidy and to name your files something that makes sense. This is just to keep things organized so you know what everything is several months from now. We are going to make a new directory to house all of the analyses for this tutorial.
 
 ```bash
 # Make a new directory and add the Sample directory into it
 mkdir Bio313-WGS
 mv SRR* Bio313-WGS/
+# confirm your two sample files are in the new directory
 cd Bio313-WGS/
-# confirm your samples are in the new directory
 ls
 ```
 
@@ -66,14 +66,10 @@ Note the file extension - fastq.**gz**. Since these files are usually pretty big
        
 ```bash
 # Examine the reads with zcat, I use the wildcard '*' to match the file since everyone's names will be different. Use tab complete and there is no need for the wildcards.
-zcat Sample*/*_R1_* | more
-# unzip the data and view
-gunzip Sample*/*_R1_*
-more Sample*/*_R1_*
-# rezip the data
-gzip Sample*/*_R1_*
+zcat SRR*_1* | more
+# Type q or Q to get out of the file and back to your command line
 # Examine reads directly with less
-less -S Sample*/*_R1_*
+less -S SRR*_1*
 ```
 
 * Fastq File Format - each sequencing read entry is four lines long.. 
@@ -92,13 +88,13 @@ less -S Sample*/*_R1_*
 
 * Count The Number of Raw Reads
 
-I always start by counting the number of reads I have for each sample. This is done to quickly assess whether we have enough data to assemble a meaningful genome. Usually these file contains millions of reads, good thing BASH is great for parsing large files! Note that the forward and reverse reads will have the same number of entries so you only need to count one.
+I always start by counting the number of reads I have for each sample. This is done to quickly assess whether we have enough data to assemble a meaningful genome. Usually these files contains millions of reads, good thing BASH is great for parsing large files! Note that the forward and reverse reads should have the same number of entries so you only need to count one (but check both if you want to be sure).
 
 ```bash
 # using grep. Note that I don't count just '@', this is because that symbol may appear in the quality lines.
-zgrep -c '@HSQ' Sample*/*R1*
+zgrep -c '@SRR' SRR*_1*
 # counting the lines and dividing by 4. Remember each read entry is exactly four lines long. These numbers should match.
-zcat Sample*/*_R1_* | wc -l
+zcat SRR*_1* | wc -l
 ```
 * Whats our total bp of data? This is what we call our sequencing throughput. We multiple the number of reads by the read length (ours is 250) and by 2 because it is paired-end data.
 
@@ -130,8 +126,8 @@ FastQC is a program to summarize read qualities and base composition. Since we h
 ```bash
 # make a directory to store the output
 mkdir fastqc_raw-reads
-# run the program
-fastqc Sample_*/*_R1_* Sample_*/*_R2_* -o fastqc_raw-reads
+# run the program, it may take a few minutes depending on the size of the files
+fastqc SRR*_1* SRR*_2* -o fastqc_raw-reads
 ls fastqc_raw-reads
 # the resulting folder should contain a zipped archive and an html file, we can ignore the zipped archive which is redundant.
 ```
