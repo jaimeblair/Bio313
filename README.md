@@ -1,10 +1,10 @@
-Bacterial Genome Assembly and Assessment Tutorial:
+**Bacterial Genome Assembly and Assessment Tutorial**
 
 This Tutorial was created by Joseph Sevigny for the T3-Train the Trainer Workshop at MDIBL
 
 ![alt text](https://www.digitalcheck.com/wp-content/uploads/2018/08/old-compouter-zenith-terminal-400px.jpg)
 
-**This site will be continuously updated throughout the week.**
+
 
 ### General Notes:
 **For each program that we run in this tutorial I have provided a link to the manual**. These manuals provide a thorough explanation of what exactly we are doing. Before running the program it is a good idea to skim through these, examine the options, and see what it does. It is also a good idea to check out the publication associated with the program. Please note that the commands we run are general and usually executed with default settings. This works great for most genomes but the options may need to be tweaked depending on your genome. Before you run any command it is also a great idea to look at the programs help menu. This can usually be done with the name of the program followed by '-h' or '-help' or '--help'. i.e. 'spades -h'. Also ... never forget about google for quick answers to any confusion.
