@@ -15,7 +15,7 @@ Throughout this tutorial the commands you will type are formatted into the gray 
 
 **Remember to tab complete!** There is a reason the tab is my favorite key. It prevents spelling errors and allows you to work 10X faster (I timed it). Remember if a filename isn't auto-completing you can hit tab twice to see your files while you continue typing your command. If a file doesn't auto-complete it means you either have a spelling mistake, are in a different directory than you originally thought, or that the file doesn't exist.
 
-## Starting Data:
+## Starting Data
 Your starting data files are found within a shared directory within your group folder (one directory level up). To start we will move a set of Sample data into your home directory. Each of these samples represent the genome of a unique and novel microbe that has not been seen before (except by me). Inside this directory are Illumina HiSeq 2500, paired-end, 250 bp sequencing reads. Looking in this directory you should see two files per sample, the forward and reverse reads. These files are in **FASTQ** format (see below).
 
 * Get your bearing on the server.
@@ -132,28 +132,15 @@ ls fastqc_raw-reads
 # the resulting folder should contain a zipped archive and an html file, we can ignore the zipped archive which is redundant.
 ```
 
-* Transfer resulting HTML files to computer using filezilla or with the command line on OSX/Linux.
-
-On filezilla you will need to enter the same server information when you login form the terminal. Be sure to use port 22.  
-
-```bash
-# to get the absolute path to a file you can use the ‘readlink’ command.
-readlink -f fastqc_raw-reads/*.html
-# copy those paths, we will use them for the file transfer
-# In a fresh terminal on OSX, Linux, or BASH for windows
-scp USERNAME@ron.sr.unh.edu:/home/GROUP/USERNAME/mdibl-t3-2019-WGS/fastqc_raw-reads/*.html /path/to/put/files
-```
-
-* Transfer resulting HTML files to computer using filezilla or with the command line on OSX/Linux.
-
-On filezilla you will need to enter the same server information when you login form the terminal. Be sure to use port 22.  
+* Transfer resulting HTML files to your computer using the command line on OSX/Linux.
+You could also use filezilla if you are familiar with that method; you will need to enter the same server information when you login form the terminal. Be sure to use port 22.  
 
 ```bash
 # to get the absolute path to a file you can use the ‘readlink’ command.
 readlink -f fastqc_raw-reads/*.html
 # copy those paths, we will use them for the file transfer
 # In a fresh terminal on OSX, Linux, or BASH for windows
-scp USERNAME@ron.sr.unh.edu:/home/GROUP/USERNAME/mdibl-t3-2019-WGS/fastqc_raw-reads/*.html /path/to/put/files
+scp -r USERNAME@ron.sr.unh.edu:/home/fandmJB/USERNAME/Bio313-WGS/fastqc_raw-reads/*.html ./Downloads
 ```
 
 ## Adapter and Quality Trimming w/ Trimmomatic
@@ -166,7 +153,7 @@ alternative tools: [cutadapt](http://cutadapt.readthedocs.io/en/stable/guide.htm
 You may have noticed from the fastqc output the some of your reads have poor qualities towards the end of the sequence, this is especially true for the reverse reads and is common for Illumina data. You may also notice that the fastqc report 'failed' for adapter content. The Trimmomtic program will be used to trim these low quality bases and to remove the adapters. I created a wrapper script called trim_script_TruSeq.sh which makes this program much easier to use. It is available on the server by calling its name, it is also available on this github repository. For this wrapper script **the input is the raw forward and reverse reads and the output will be new trimmed fastq files**. We will use these trimmed reads for our genome assembly. When you are more comfortable using BASH you can call Trimmomatic directly by using the manual or by copying the code from the provided script.
 
 ```bash
-# Run wrapper script
+# Run wrapper script - this may take a few minutes
 trim_script_TruSeq.sh Sample_*/*_R1_* Sample_*/*_R2_*
 # if you want to see inside the program you can take a look.
 which trim_script_TruSeq.sh
@@ -182,7 +169,7 @@ mv *fastq.gz trimmed_reads/
 ls trimmed_reads/
 ```
 
-When the program finishes it outputs four files. paired_forward.fastq.gz, paired_reverse.fastq.gz, and two unpaired reads. These output files are cleaned reads, which hopefully retained the highly confident sequences and have removed the adapters from the sequences. Some sequences will be lost entirely, some will lose a few bases off the ends, and some won't be trimmed at all. When a reverse read is lost but a forward read is maintained, the forward read will be written to the unpaired_forward.fastq.gz file (and vise-versa).
+When the program finishes it outputs four files: paired_forward.fastq.gz, paired_reverse.fastq.gz, and two unpaired reads files. These output files are cleaned reads, which hopefully retained the highly confident sequences and have removed the adapters from the sequences. Some sequences will be lost entirely, some will lose a few bases off the ends, and some won't be trimmed at all. When a reverse read is lost but a forward read is maintained, the forward read will be written to the unpaired_forward.fastq.gz file (and vise-versa).
 
 ![fastqc](https://user-images.githubusercontent.com/18738632/42241259-ef2d5f0c-7ed7-11e8-8a7f-f7407979202f.png)
 
