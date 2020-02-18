@@ -1,5 +1,6 @@
-# MDIBL-T3-WGS
-Bacterial Genome Assembly and Assessment Tutorial
+Bacterial Genome Assembly and Assessment Tutorial:
+
+This Tutorial was created by Joseph Sevigny for the T3-Train the Trainer Workshop at MDIBL
 
 ![alt text](https://www.digitalcheck.com/wp-content/uploads/2018/08/old-compouter-zenith-terminal-400px.jpg)
 
