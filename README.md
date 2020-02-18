@@ -7,20 +7,20 @@ This Tutorial was created by Joseph Sevigny for the T3-Train the Trainer Worksho
 
 
 ### General Notes:
-**For each program that we run in this tutorial I have provided a link to the manual**. These manuals provide a thorough explanation of what exactly we are doing. Before running the program it is a good idea to skim through these, examine the options, and see what it does. It is also a good idea to check out the publication associated with the program. Please note that the commands we run are general and usually executed with default settings. This works great for most genomes but the options may need to be tweaked depending on your genome. Before you run any command it is also a great idea to look at the programs help menu. This can usually be done with the name of the program followed by '-h' or '-help' or '--help'. i.e. 'spades -h'. Also ... never forget about google for quick answers to any confusion.
+**For each program that we run in this tutorial I have provided a link to the manual**. These manuals provide a thorough explanation of what exactly we are doing. Before running a program it is typically a good idea to skim through the manual, examine the options, and see what everything does. It is also a good idea to check out the publication associated with the program. Please note that the commands we run are general and usually executed with default settings. This works great for most genomes but the options may need to be tweaked depending on your genome. Before you run any command it is also a great idea to look at the program's help menu. This can usually be done with the name of the program followed by '-h' or '-help' or '--help'. i.e. 'spades -h'. Also ... Google is great for quick answers to clear up any confusion.
 
 This tutorial assumes a general understanding of the BASH environment. **You should be familiar with moving around the directories and understand how to manipulate files**.
 
-Throughout this tutorial the commands you will type are formatted into the gray text boxes (don't do it when learning but they can be faithfully copied and pasted). The '#' symbol indicates a comment, BASH knows to ignore these lines. 
+Throughout this tutorial the commands you will type are formatted into the gray text boxes. The '#' symbol indicates a comment, BASH knows to ignore these lines. 
 
-**Remember to tab complete!** There is a reason the tab is my favorite key. It prevents spelling errors and allows you to work 10X faster (I timed it). Remember if a filename isn't auto-completing you can hit tab twice to see your files while you continue typing your command. If a file doesn't auto-complete it means you either have a spelling mistake, are in a different directory than you originally thought, or that it doesn't exist.
+**Remember to tab complete!** There is a reason the tab is my favorite key. It prevents spelling errors and allows you to work 10X faster (I timed it). Remember if a filename isn't auto-completing you can hit tab twice to see your files while you continue typing your command. If a file doesn't auto-complete it means you either have a spelling mistake, are in a different directory than you originally thought, or that the file doesn't exist.
 
 ## Starting Data:
-Your starting data is found within a shared directory within your group folder (one directory level up). To start we will move a set of Sample data into your home directories. Each of these samples represent the genome of a unique and novel microbe that has not been seen before (except by me). Inside this directory are Illumina HiSeq 2500, paired-end, 250 bp sequencing reads. Looking in this directory you should see two files per sample, the forward and reverse reads. These files are in **FASTQ** format (see below).
+Your starting data files are found within a shared directory within your group folder (one directory level up). To start we will move a set of Sample data into your home directory. Each of these samples represent the genome of a unique and novel microbe that has not been seen before (except by me). Inside this directory are Illumina HiSeq 2500, paired-end, 250 bp sequencing reads. Looking in this directory you should see two files per sample, the forward and reverse reads. These files are in **FASTQ** format (see below).
 
 * Get your bearing on the server.
 
-It's hard to know where your going if you don't know where you are. When I am working on the server I constantly type 'ls' and 'pwd' to make sure I am where I think I am. You should too!
+It's hard to know where you are going if you don't know where you are. When I am working on the server I constantly type 'ls' and 'pwd' to make sure I am where I think I am. You should too!
 
 ```bash
 # print your current working directory. If you just logged in you should be in your home directory (/home/group/username/)
@@ -33,20 +33,18 @@ ls
 ls ../
 # view the shared directory of starting data
 ls ../shared
-# View the shared project with the ‘tree’ command
-tree ../shared
-# Copy a sample from the shared directory to your home dir, 
-#“Project_X”, where X denotes the Project name and "Sample_X" (where X denotes your sample name).
-# USE AUTOCOMPLETE
-cp -r ../shared/Project_X/ Sample_X/ ./
-# confirm the copy arrived (remember ‘*’ will match any character/string)
-ls Sample_*/
+# Copy a sample from the shared directory to your home dir, "SRR_X" (where _X denotes your sample number).
+# USE AUTOCOMPLETE since these files have long names!
+cp -r ../shared/SRR_X ./
+# Remember to do this twice since there are two files for each sample (paired-end sequencing)
+# confirm the copies arrived in your home folder
+ls SRR*
 ```
 
 [Link explaining the 'Read Name Format'](http://support.illumina.com/content/dam/illumina-support/help/BaseSpaceHelp_v2/Content/Vault/Informatics/Sequencing_Analysis/BS/swSEQ_mBS_FASTQFiles.htm): SampleName_Barcode_LaneNumber_001.fastq.gz
 
 
-Important note: In the above command I use the "\*" character to view the Sample directory, I would normally just type out the entire path using tab complete (which is what you should do). This wildcard will match any string of characters. I use this because everyone will have a different Sample name. To make this tutorial as general as possible I need to use these wildcards throughout the tutorial. In addition I may use Sample_X instead of Sample_\*. In these cases be sure to type out your complete sample name!, the wildcards probably won't work 
+Important note: In the above command I use the "*" character to view the Sample files, I would normally just type out the entire path using tab complete (which is what you should do). This wildcard will match any string of characters. I use this because everyone will have a different Sample name. To make this tutorial as general as possible I need to use these wildcards throughout the tutorial. Be sure to type out your complete sample name! (and use autocomplete) 
 
 
 * Prepare your working directory
@@ -55,11 +53,11 @@ It is a good idea to keep your directories tidy and to name your files something
 
 ```bash
 # Make a new directory and add the Sample directory into it
-mkdir mdibl-t3-2019-WGS
-mv Sample* mdibl-t3-20189-WGS/
-cd mdibl-t3-2019-WGS/
-# make the sample directory name more meaningful
-mv Sample_X Sample_X-raw_reads
+mkdir Bio313-WGS
+mv SRR* Bio313-WGS/
+cd Bio313-WGS/
+# confirm your samples are in the new directory
+ls
 ```
 
 ## Examine the Raw Reads
