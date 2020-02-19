@@ -484,9 +484,9 @@ less -S raw_mapped.sam
 ## Visualizing our Genome (and any contamination) w/ Blobtools
 blobtools manual: https://blobtools.readme.io/docs
 
-Blobtools is a tool to visualize our genome assembly. It is also useful for filtering read and assembly data sets. **There are three main inputs to the program: 1.) Contig file (the one we used for BLAST and BWA), 2.) a 'hits' file generated from BLAST, 3.) A SAM or BAM file. The main output of the program are blobplots which plot the GC, coverage, taxonomy, and contigs lengths on a single graph.** 
+Blobtools is a tool to visualize our genome assembly. It is also useful for filtering read and assembly data sets. **There are three main inputs to the program: 1) Contig file (the one we used for BLAST and BWA), 2) a 'hits' file generated from BLAST, 3) A SAM or BAM file. The main output of the program are blobplots which plot the GC, coverage, taxonomy, and contigs lengths on a single graph.** 
 
-The first step (blobtools create) in this short pipeline takes all of our input files and creates a lookup table that is used for plotting and constructing tables. This step does the brunt of the working, parsing the BLAST file to assign taxonomy to each of our sequences, and parsing the SAM file to calculate coverage information.
+The first step (blobtools create) in this short pipeline takes all of our input files and creates a lookup table that is used for plotting and constructing tables. This step does the brunt of the work, parsing the BLAST file to assign taxonomy to each of our sequences, and parsing the SAM file to calculate coverage information.
 
 After that is complete we will use 'blobtools view' to output all the data into a human readable table. Finally we will use 'blobtools plot' to construct the blobplot visuals.
 
@@ -495,7 +495,7 @@ After that is complete we will use 'blobtools view' to output all the data into 
 ```bash
 # Create lookup table
 blobtools create --help
-blobtools create -i contigs.fasta -b raw_mapped.sam -t contigs.fasta.vs.nt.cul5.1e5.megablast.out -o blob_out
+blobtools create -i spades_assembly/contigs.fasta -b raw_mapped.sam -t spades_assembly/contigs.fasta.vs.nt.cul5.1e5.megablast.out -o blob_out
 # Create output table
 blobtools view --help
 blobtools view -i blob_out.blobDB.json -r all -o blob_taxonomy
@@ -523,10 +523,10 @@ I am going to take this one step at a time and construct a final contig list one
 
 ```bash
 # make a directory for filtering
-mkdir ~/mdibl-t3-2018-WGS/filtered_assembly
-cd ~/mdibl-t3-2018-WGS/filtered_assembly
+mkdir ~/Bio313-WGS/filtered_assembly
+cd ~/Bio313-WGS/filtered_assembly
 # copy the taxonomy table
-cp ~/~/mdibl-t3-2018-WGS/blob_taxonomy.blob_out.blobDB.table.txt ./
+cp ~/~/Bio313-WGS/blob_taxonomy.blob_out.blobDB.table.txt ./
 # Filter by length
 grep -v '#' blob_taxonomy.blob_out.blobDB.table.txt | awk -F'\t' '$2 > 500' | tabview -
 # You can always do the opposite to examine what you are losing, do this every time
