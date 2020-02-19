@@ -153,18 +153,19 @@ alternative tools: [cutadapt](http://cutadapt.readthedocs.io/en/stable/guide.htm
 You may have noticed from the fastqc output the some of your reads have poor qualities towards the end of the sequence, this is especially true for the reverse reads and is common for Illumina data. You may also notice that the fastqc report 'failed' for adapter content. The Trimmomtic program will be used to trim these low quality bases and to remove the adapters. I created a wrapper script called trim_script_TruSeq.sh which makes this program much easier to use. It is available on the server by calling its name, it is also available on this github repository. For this wrapper script **the input is the raw forward and reverse reads and the output will be new trimmed fastq files**. We will use these trimmed reads for our genome assembly. When you are more comfortable using BASH you can call Trimmomatic directly by using the manual or by copying the code from the provided script.
 
 ```bash
-# Run wrapper script - this may take a few minutes
-trim_script_TruSeq.sh Sample_*/*_R1_* Sample_*/*_R2_*
+# Run wrapper script - this may take up to ten minutes depending on your number of reads
+trim_script_TruSeq.sh SRR*_1* SRR*_2*
 # if you want to see inside the program you can take a look.
 which trim_script_TruSeq.sh
 more /usr/local/bin/trim_script_TruSeq.sh
 ```
 
-* Move the trimmed reads to new directory - remember its a good idea to keep the directory clean.
+* Move the trimmed reads to new directory - remember it is a good idea to keep the directory clean.
 ```bash
 mkdir trimmed_reads
 # move all the reads into the new directory
-mv *fastq.gz trimmed_reads/
+mv paired_* trimmed_reads/
+mv unpaired_* trimmed_reads/
 # confirm that the files have moved
 ls trimmed_reads/
 ```
@@ -175,24 +176,24 @@ When the program finishes it outputs four files: paired_forward.fastq.gz, paired
 
 Similar to above, you can run FASTQC again with your new trimmed reads. Comparing the original html and the new one you should note the differences (see above).
 
-You can also count the number of reads for each of your files like you did for the raw reads. How does this compare to the original count? What percentage of your reads did you lose? How many reads are unpaired?
+You can also count the number of reads for each of your files like you did for the raw reads. How does this compare to the original count? What percentage of your reads did you lose? How many reads are now unpaired?
 
 ## Genome Assembly w/ SPAdes
 manual: http://cab.spbu.ru/software/spades/
 
 alternative tools: [ABySS](http://www.bcgsc.ca/platform/bioinfo/software/abyss), [MaSuRCA](http://masurca.blogspot.com/)
 
-With our trimmed reads in hand are now ready to assemble our genomes (check out Kelley's PowerPount for how it works). There are many programs that are used for genome assembly and different assemblers work well with certain genomes (how large the genome is, how complex, is it a Eukaryote, etc), but SPAdes works very well for most bacteria. Either way these programs are usually run with the same sort of syntax. **The input is a set of sequencing reads in FASTQ format and the output will be a FASTA file which is the genome assembly**. I encourage you to try out a different assembler and compare the results.
+With our trimmed reads in hand we are now ready to assemble our genomes! There are many programs that are used for genome assembly and different assemblers work well with different genomes depending on how large the genome is, how complex, is it a Eukaryote, etc. Either way these programs are usually run with the same sort of syntax. We will use SPAdes, which works very well for most bacteria.  **The input is a set of sequencing reads in FASTQ format and the output will be a FASTA file which is the genome assembly**. 
 
 * Run SPAdes
 ```bash
 # examine the help menu
 spades.py --help
 # run spades with the forward, reverse, and unpaired reads.
-nohup spades.py -1 trimmed_reads/paired_forward.fastq.gz -2 trimmed_reads/paired_reverse.fastq.gz -s trimmed_reads/unpaired_forward.fastq.gz -s trimmed_reads/unpaired_reverse.fastq.gz -o spades_assembly_default -t 24 &
+nohup spades.py -1 trimmed_reads/paired_forward.fastq.gz -2 trimmed_reads/paired_reverse.fastq.gz -s trimmed_reads/unpaired_forward.fastq.gz -s trimmed_reads/unpaired_reverse.fastq.gz -o spades_assembly -t 24 &
 ```
 
-Notice that the above command makes use of 'nohup' and '&'. Its good practice to always use these two together. This allows you to close your computer and let the server continue working and/or let you continue working while the job runs in the background. This is the most computationally expensive program of the pipeline. It is taking our millions of reads and attempting to put them back together, as you can image that takes a lot of work. It will probably take a few hours to run.
+Notice that the above command makes use of 'nohup' and '&'. It is good practice to always use these two together. This allows you to close your computer and let the server continue working and/or let you continue working while the job runs in the background. This is the most computationally expensive program of the pipeline. It is taking our millions of reads and attempting to put them back together, as you can image that takes a lot of work. It will probably take a few hours to run.
 
 You can check the output of nohup for any errors. If there are any errors you will see them at the bottom of the file. The best way to check is with the 'tail' command. Try 'tail nohup.out'.
 
@@ -209,13 +210,13 @@ echo $USER
 * View Output Data When the assembly finishes.
 
 ```bash
-ls spades_assembly_default/
+ls spades_assembly/
 # view FASTA file
-less -S spades_assembly_default/contigs.fasta
+less -S spades_assembly/contigs.fasta
 # view the top 10 headers
-grep '>' spades_assembly_default/contigs.fasta | head
+grep '>' spades_assembly/contigs.fasta | head
 # count the number of sequences
-grep -c '>' spades_assembly_default/contigs.fasta
+grep -c '>' spades_assembly/contigs.fasta
 ```
 
 ## FASTA format
