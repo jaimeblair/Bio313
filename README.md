@@ -221,15 +221,15 @@ grep -c '>' spades_assembly/contigs.fasta
 
 ## FASTA format
 
-The FASTA format is similar to the FASTQ format except it does not include quality information. Each sequence is also delineated by a '>' symbol instead of a '@'. In addition, all the sequences will be much larger (since they were assembled). Instead of all the sequencing being 250 bp they could be the size of an entire genome!  Each of the sequence entries in the FASTA file are typically refereed to as a contig, which means contiguous sequence. In an ideal world the assembler would work perfectly and we would have one contig per chromosome in the genome. In the case of a typical bacterium (if there is such a thing) this would mean one circular chromosome and maybe a plasmid. So if the assembly worked perfect we would see two contigs in our FASTA file. However, this is very rarely the case (unless we add some sort of long-read technology like pacbio or nanopore sequencing). How fragmented your reconstructed genome is usually depends on how many reads you put into your assembler, how large the genome is, and what the architecture and complexity of the genome is like. We typically see a genome split into 10's to 100's of contigs for a typical run.
+The FASTA format is similar to the FASTQ format except it does not include quality information. Each sequence is also delineated by a '>' symbol instead of a '@' symbol. In addition, all the sequences will be much larger (since they were assembled). Instead of 250 bp like the raw reads, they could be the size of an entire genome!  Each of the sequences in the FASTA file is typically referred to as a contig, which means contiguous sequence. In an ideal world the assembler would work perfectly and we would have one contig per chromosome in the genome. In the case of a typical bacterium (if there is such a thing) this would mean one circular chromosome and maybe a plasmid. So if the assembly worked perfect we would see two contigs in our FASTA file. However, this is very rarely the case (unless we add some sort of long-read technology like PacBio or Nanopore sequencing). How fragmented your reconstructed genome is usually depends on how many reads you put into your assembler, how large the genome is, and the underlying architecture and complexity of the genome. We typically see a genome split into tens to hundreds of contigs for a typical run.
 
-In the case of SPAdes the FASTA headers are named in a common format. Something like "NODE_1_length_263127_cov_73.826513". The first field is a unique name for the contig (just a numerical value), the next field is the length of the sequence, and the last field is the kmer coverage of that contig (this is different than read coverage which NCBI submissions require). Furthermore, the contigs are organized by length where the longest contigs are first.
+In the case of SPAdes the FASTA headers are named in a common format, such as "NODE_1_length_263127_cov_73.826513." The first field is a unique name for the contig (just a numerical value), the next field is the length of the sequence, and the last field is the kmer coverage of that contig (this is different than read coverage which NCBI submissions require). Furthermore, the contigs are organized by length and the longest contigs are first.
 
-* Clean up Spades directory.
+* Clean up SPAdes directory.
 
 When you listed the SPAdes directory you could see that it makes a lot of output folders, all of which are explained in the manual. We really only 'care' about the contigs.fasta file and the spades.log. The spades.log is important because it includes details about how exactly we ran the assembly. If you ever wanted to reproduce your assembly this file might come in handy. The rest of the files can be deleted, if we ever need them you can always use the spades.log to rerun the analysis.
 
-We are going to proceed to remove these unwanted files. **Remember if you delete a file using the 'rm' command it is gone forever, there is no way to get it back, there is no recover from trash bin, so be careful!**
+We are going to remove these unwanted files. **Remember if you delete a file using the 'rm' command it is gone forever, there is no way to get it back, there is no recover from trash bin, so be careful!**
 
 
 ```bash
@@ -253,10 +253,7 @@ ls
 
 # Genome Assessment
 
-Now that are initial spades assembly is completed we can move on to genome assessment. We will use QUAST to examine contiguity, BUSCO to assess completeness, and blobtools to check for contamination.
-
-
-We are also going to use BLAST to identify our organisms. Up to this point you probably don't know what it is.
+Now that our initial SPAdes assembly is complete we can move on to genome assessment. We will use QUAST to examine contiguity and BUSCO to assess completeness. We will also use BLAST to identify our organism!
 
 
 ## Genome Structure Assessment w/ QUAST
