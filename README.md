@@ -374,7 +374,7 @@ The above command does a lot. It is a good idea to break it up and examine what 
 Take a look at the protein_abundances.txt file using less. What are the most abundant proteins? What else do you notice as you skim the file? We will be using more of these files later on in the tutorial.
 
 
-## Extract the 16S rDNA sequence from the FFN file.
+## Extract the 16S rDNA sequence from the FFN file
 
 The 16S rDNA sequence is a housekeeping gene coding for the large ribosomal subunit in Bacteria. It is highly conserved and found in every known Bacteria. This makes it a great tool to identity the bacterium (which is why it is used in metabarcoding studies). This is (hopefully) one of the genes that was identified from PROKKA. It is not a protein so it won't be found in the FAA file but it should be in the FFN file. We are going to use a simple script that is available on the server called "extract_sequence". **The program requires two inputs, 1.) a string to search in the headers (just like grep), 2.) the PROKKA ffn file. The program will output the sequence to the screen so be sure to save it with '> filename' in your command.** 
 
@@ -423,7 +423,7 @@ The only required input is a FASTA file (our contigs), the database type (nucl o
 makeblastdb -in contigs.fasta -dbtype nucl -out contigs_db 
 ```
 
-## BLAST the 16S sequence against your contig database.
+## BLAST the 16S sequence against your contig database
 
 As I mentioned BLAST has many options, too many to review here. Typically you will want to specify at least four options. The first is your query sequence, the sequence we are trying to locate in our assembly. Next is the 'db,' this is our database we just created from our assembly. Third is the name of the output file, use something informative. And finally we specify the output format. There are many options but the most common is output format '6' which is a simple tab delimited file. This output format is often the one required by external programs and is completely customizable. You can specify what sorts of columns you want to provide, default is 'qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore.' This is usually good enough but all these details can be seen in the help menu.
 
@@ -442,14 +442,14 @@ tabview 16S_vs_contigs_6.tsv
 Since this 16S sequence was derived from this assembly you should see a perfect 100% identity match spanning about 1500 nucleotides. If you had more than one 16S sequence in your query file, you will see results for both.
 
 
-## BLAST the entire assembly against the nt database.
+## BLAST the entire assembly against the nt database
 
-We store a local copy of the complete nucleotide database on our server. We will be using this to provide a rough taxonomy to every sequence in our assembly and to ultimately identify non-target contaminates (like human and other bacteria) and to confirm our species identification from the 16S BLAST. Later we will be using the output file as in input to  blobtools and to visualize this information. blobtools requires a specifically formatted BLAST file, I therefore provide a script that will run the BLAST to the programs specification. We will simply provide the script with our contigs file and it will complete the task. This is a simple script that is not much different than the example we ran above. It will automatically format a meaningfull output name. 
+We store a local copy of the complete nucleotide database on our server. We will be using this to provide a rough taxonomy to every sequence in our assembly and to ultimately identify non-target contaminates (like human and other bacteria) and to confirm our species identification from the 16S BLAST. Later we will be using the output file as in input to blobtools and to visualize this information. blobtools requires a specifically formatted BLAST file, so there is a script that will run the BLAST to the program's specification. We will simply provide the script with our contigs file and it will complete the task. This is a simple script that is not much different than the example we ran above. It will automatically format a meaningful output name. 
 
 ```bash
 # run the scipt, note that it will automatically use nohup since it will take about 30 minutes to run
 blob_blast.sh contigs.fasta
-# view the reuslts, the last column is the species identification
+# view the results, the last column is the species identification
 tabview contigs.fasta.vs.nt.cul5.1e5.megablast.out
 ```
 
