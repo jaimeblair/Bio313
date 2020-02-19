@@ -401,19 +401,19 @@ https://blast.ncbi.nlm.nih.gov/Blast.cgi
 
 ![blast_flavors](https://user-images.githubusercontent.com/18738632/42249024-d5b4a2be-7ef6-11e8-954b-e3b697876f83.png)
 
-We are going to provide the 16S sequence we just extracted from our prokka results and BLAST it against the complete set of reference nucleotide sequences (nt database) on NCBI in an attempt to identify its species origin. The nt database comprises all the sequences that have been submitted to genbank so if the species has been sequenced before we have a good chance of identifying the sequence. To start we need to click on the 'blastn' option from the link above, this is because we want to blast a nucleotide query sequence against a nucleotide database.
+We are going to use the 16S sequence we just extracted from our PROKKA results and BLAST it against the complete set of reference nucleotide sequences (nt database) on NCBI in an attempt to identify our bacterial genome. The nt database comprises all the sequences that have been submitted to Genbank so if the species has been sequenced before we have a good chance of identifying the sequence. To start we need to click on the 'blastn' option from the link above, this is because we want to blast a nucleotide query sequence against a nucleotide database.
 
-You can copy and paste the 16S sequence directly into the page or input the file using the web form. Next you select teh database you want to BLAST against. By default it will use the complete collection of nucleotide sequences. You can change this to contain just 16S sequences or not. Both should hopefully give us the same answer. The rest of the options can be left to default and you can hit "BLAST".
+You can copy and paste the 16S sequence directly into the page or input the file using the web form. Next you select the database you want to BLAST against. By default it will use the complete collection of nucleotide sequences. You can change this to contain just 16S sequences or not. Both should hopefully give us the same answer. The rest of the options can be left to default and you can hit the "BLAST" button.
 
-When it finishes you can scroll down to see your top hits in the database. The best matches are at the top. If you see matches that have high query coverage and sequence similarity you can be fairly confident in the taxonomic assignment and you now how a rough identification of your samples genus!
+When BLAST finishes scroll down to see your top hits in the database. The best matches are at the top. If you see matches that have high query coverage and high sequence similarity you can be fairly confident in the taxonomic assignment. Now you should have a fairly confident identification for your sample, at least to the genus level.
 
 
 ## Command Line BLAST
 manual: https://www.ncbi.nlm.nih.gov/books/NBK279690/
 
-Using the command line BLAST works essentially the same as NCBI BLAST except we have more control. We can specify more options like output formats and also use our own local databases. It is also a lot more useful for pipelines and workflows since it can be automated, you don't need to open a web page and fill out any forms. 
+Using the command line BLAST works essentially the same as NCBI BLAST except we have more control. We can specify more options like output formats and also use our own local databases. It is also a lot more useful for pipelines and workflows since it can be automated; you don't need to open a web page and fill out any forms. 
 
-As a quick example for how BLAST works we will use the same 16S_sequence and BLAST it against our genome assembly.  Before we begin we will make a database out of our contig assembly. This is done to construct a set of files that BLAST can use to speed up its sequence lookup. In the end it means we have to wait less time for our results.
+As a quick example for how BLAST works we will use the same 16S_sequence and BLAST it against our genome assembly.  Before we begin we will make a database out of our contig assembly. This is done to construct a set of files that BLAST can use to speed up the sequence lookup. In the end it means we have to wait less time for our results.
 
 * Make a BLAST db from your contig files
 
@@ -425,7 +425,7 @@ makeblastdb -in contigs.fasta -dbtype nucl -out contigs_db
 
 ## BLAST the 16S sequence against your contig database.
 
-As I mentioned BLAST has many options, too many to review here. Typically you will want to specify at least four options. The first is your query sequence, the sequence we are trying to locate in our assembly. Next is the 'db', this is our database we just created from our assembly. Third is the name of the output file, use something informative. And finally we specify the output format. There are many options but the most common is output format '6' which is a simple tab delimited file. This output format is often the one required by external programs and is completely customization. You can specify what sorts of columns you want to provide, default is 'qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore'. This is usually good enough but all these details can be seen in the help menu.
+As I mentioned BLAST has many options, too many to review here. Typically you will want to specify at least four options. The first is your query sequence, the sequence we are trying to locate in our assembly. Next is the 'db,' this is our database we just created from our assembly. Third is the name of the output file, use something informative. And finally we specify the output format. There are many options but the most common is output format '6' which is a simple tab delimited file. This output format is often the one required by external programs and is completely customizable. You can specify what sorts of columns you want to provide, default is 'qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore.' This is usually good enough but all these details can be seen in the help menu.
 
 If there are mutliple hits for a single query BLAST will provide all of them by default. These hits will be organized by bitscore, which is a measure of our confidence in the match. Bit-score is a combination of match length and sequence similarity. It is up to the user (or an external program) to parse through this file and determine which hits are meaningful
 
@@ -439,7 +439,7 @@ tabview 16S_vs_contigs_6.tsv
 
 ```
 
-Since this 16S sequence was derived from this assembly you should see a perfect 100% identity match spanning about 1500 nucleotides. 
+Since this 16S sequence was derived from this assembly you should see a perfect 100% identity match spanning about 1500 nucleotides. If you had more than one 16S sequence in your query file, you will see results for both.
 
 
 ## BLAST the entire assembly against the nt database.
