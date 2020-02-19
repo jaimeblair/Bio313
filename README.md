@@ -371,12 +371,12 @@ The above command does a lot. It is a good idea to break it up and examine what 
     # "sort | uniq -c " togethor combine all the duplicate lines and provide a count for each.
     # finally we save it to a file by using " > my_file"
 
-This is a good time to explore and make use of BASH. Hopefully everyone is getting used to working in BASH so they can explore as they want. Try to count the number of lines in the GFF that contain 'CDS'. How many tRNAs did we identify. etc. etc. We will be using more of these files later on in the tutorial.
+Take a look at the protein_abundances.txt file using less. What are the most abundant proteins? What else do you notice as you skim the file? We will be using more of these files later on in the tutorial.
 
 
-## Extract the 16S sequence from the FFN file.
+## Extract the 16S rDNA sequence from the FFN file.
 
-The 16S sequence is a housekeeping gene coding for the large ribosomal subunit in Bacteria. It is highly conserved and found in every known Bacteria. This makes it a great tool to identity the bacterium (which is why it is used in metabarcoding studies). This is (hopefully) one of the genes that were identified from PROKKA. It is not a protein so it won't be found in the FAA file but it should be in the FFN file. We are going to use a simple script we wrote that is available on the server and this github page called "extract_sequence". **The program requires two inputs, 1.) a string to search in the headers (just like grep), 2.) the PROKKA ffn file. The program will output the sequence to the screen so be sure to save it with '>'. 
+The 16S rDNA sequence is a housekeeping gene coding for the large ribosomal subunit in Bacteria. It is highly conserved and found in every known Bacteria. This makes it a great tool to identity the bacterium (which is why it is used in metabarcoding studies). This is (hopefully) one of the genes that was identified from PROKKA. It is not a protein so it won't be found in the FAA file but it should be in the FFN file. We are going to use a simple script that is available on the server and this github page called "extract_sequence". **The program requires two inputs, 1.) a string to search in the headers (just like grep), 2.) the PROKKA ffn file. The program will output the sequence to the screen so be sure to save it with '> filename' in your command. 
 
 ```bash
 # grep for 16S in the PROKKA annotations to see if it exists
