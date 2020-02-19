@@ -453,7 +453,7 @@ blob_blast.sh contigs.fasta
 tabview contigs.fasta.vs.nt.cul5.1e5.megablast.out
 ```
 
-We will leave this BLAST file for now but will come back to it when we are ready to run blobtools. blobtools requires two input files, the BLAST results and a mapping file (SAM/BAM) which we will generate next.
+We will leave this BLAST running for now but will come back to it when we are ready to run blobtools. blobtools requires two input files, the BLAST results and a mapping file (SAM/BAM) which we will generate next.
 
 
 ## Read Mapping w/ BWA and samtools
@@ -462,7 +462,7 @@ BWA manual: http://bio-bwa.sourceforge.net/bwa.shtml
 
 samtools manual: http://www.htslib.org/doc/samtools-1.2.html
 
-Read Mapping refers to the process of aligning short reads to a reference sequence. This reference can be a complete genome, a transcriptome, or in our case de novo assembly. Read mapping is fundamental to many commonly used pipelines like differential expression or SNP analysis. We will be using it to calculate the average coverage of each of our contigs and to calculate the overall coverage of our genome (a requirement for genbank submission).The main output of read mapping is a Sequence Alignment Map format (SAM). The file provides information about where our sequencing reads match to our assembly and information about how it maps. There are hundreds of programs that use SAM files as a primary input. A BAM file is the binary version of a SAM, and can be converted very easily using samtools. 
+Read mapping refers to the process of aligning short reads to a reference sequence. This reference can be a complete genome, a transcriptome, or in our case, a de novo assembly. Read mapping is fundamental to many commonly used pipelines like differential expression or SNP analysis. We will be using it to calculate the average coverage of each of our contigs and to calculate the overall coverage of our genome (a requirement for Genbank submission).The main output of read mapping is a Sequence Alignment Map (SAM) file. The file provides information about where our sequencing reads match to our assembly and information about how it maps. There are hundreds of programs that use SAM files as a primary input. A BAM file is the binary version of a SAM, and can be converted very easily using samtools. 
 
 SAM format specifications: https://samtools.github.io/hts-specs/SAMv1.pdf
 
@@ -471,29 +471,17 @@ Many programs perform read mapping. The recommended program depends on what you 
 * Map Reads to your assembly
 
 ```bash
+# First make sure you are back in the Bio313-WGS directory - that way you can access all the files you need.
 # Step 1: Index your reference genome. This is a requirement before read mapping.
-bwa index -a bwtsw $fasta
+bwa index -a bwtsw spades_assembly/contigs.fasta
 # Step 2: Map the reads and construct a SAM file.
-bwa mem -M -t 24 $fasta $forward $reverse > raw_mapped.sam
+bwa mem -M -t 24 spades_assembly/contigs.fasta SRR*_1.fastq.gz SRR*_2.fastq.gz > raw_mapped.sam
 # view the file with less, note that to see the data you have to scroll down past all the headers (@SQ).
 less -S raw_mapped.sam
-# Examine how many reads mapped with samtools
-samtools flagstat raw_mapped.sam
 ```
 
-* Construct a coverage table using samtools and other programs.
 
-```bash
-# Remove sequencing reads that did not match to the assembly and convert the SAM to a BAM.
-samtools view -@ 24 -Sb -F 4  raw_mapped.sam  | samtools sort -@ 24 - -o sorted_mapped.bam
-# Calculate per base coverage with bedtools
-bedtools genomecov -ibam sorted_mapped.bam > coverage.out
-# Calculate per contig coverage with gen_input_table.py
-gen_input_table.py  --isbedfiles $fasta coverage.out >  coverage_table.tsv
-# This outputs a simple file with two columns, the contig header and the average coverage.
-```
-
-## Non-target contig removal w/ Blobtools
+## Visualizing our Genome (and any contamination) w/ Blobtools
 blobtools manual: https://blobtools.readme.io/docs
 
 Blobtools is a tool to visualize our genome assembly. It is also useful for filtering read and assembly data sets. **There are three main inputs to the program: 1.) Contig file (the one we used for BLAST and BWA), 2.) a 'hits' file generated from BLAST, 3.) A SAM or BAM file. The main output of the program are blobplots which plot the GC, coverage, taxonomy, and contigs lengths on a single graph.** 
