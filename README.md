@@ -323,7 +323,7 @@ The final files we will examine are in a directory called 'single_copy_busco_seq
 less -S run_busco_output/short_summary_busco_output.txt
 # view the full table
 less -S run_busco_output/full_table_busco_output.tsv
-# list and view a amino acid of protein sequence
+# list and view the protein sequence files - notice each unique ID has a .fna and a .faa file
 ls run_busco_output/single_copy_busco_sequences/
 ```
 
