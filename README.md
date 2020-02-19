@@ -305,18 +305,18 @@ ls /usr/local/src/augustus-3.2.2/rc/
 ```bash
 #look at the help menu
 run_BUSCO.py --help
-# run busco
+# run busco - this may take a few minutes
 nohup run_BUSCO.py -i contigs.fasta -o busco_output -m genome -l /usr/local/src/augustus-3.2.2/lineages/bacteria_odb9/ -c 1 &
 # note: the -c command is the number of threads. A bug in BLAST prevents consistent results with greater than 1 for this option.
 ```
 
 * Examine the BUSCO output.
 
-The first file we will look at is the 'short_summary_busco_output.txt'. This is a file which summarizes the main findings, how many of the expected genes did we find? This summary breaks the report into four main categories: complete single-copy genes, complete duplicated genes, fragmented genes, and missing genes. We are hopeful that the majority of our genes will be found as 'complete single-copy'. Duplicated genes could indicate that that particular gene underwent a gene duplication event or that we had a miss assembly and essentially have two copies of a region of our genome. Fragmented genes are an artifact of the fact that our genome did not assemble perfectly. Some of our genome is fragmented into multiple contigs, and with that some of our genes are going to be fragmented as well. This is why it is important to inspect the N50 of the genome with QUAST. We want the majority of our contigs to be at least as big as a gene, if it's not than we will have many fragmented genes as a result.
+The first file we will look at is the 'short_summary_busco_output.txt' file. This summary breaks the report into four main categories: complete single-copy genes, complete duplicated genes, fragmented genes, and missing genes. We are hopeful that the majority of our genes will be found as 'complete single-copy.' Duplicated genes could indicate that a particular gene underwent a gene duplication event or that we have an assembly error and essentially have two copies of a region of our genome. Fragmented genes are an artifact of the fact that our genome did not assemble perfectly. Some of our genome is fragmented into multiple contigs, and with that some of our genes are going to be fragmented as well. This is why it is important to inspect the N50 of the genome with QUAST. We want the majority of our contigs to be at least as big as a gene, if it's not than we will have many fragmented genes as a result.
 
 Next we will view the 'full_table_busco_output.tsv' file. This is a file which shows the coordinates for all the associated single copy genes in our genome. It also provides information about the status of that ortholog (missing, complete, fragmented). This tsv file can be exported and viewed in excel.
 
-The final files we will examine are in a directory called 'single_copy_busco_sequences/'. This houses all the amino acid and protein sequences. This is a rich source for comparative genomics and other sorts of analyses.
+The final files we will examine are in a directory called 'single_copy_busco_sequences/'. This houses all the files for the BUSCO proteins (both nucleotide and amino acid sequences). This is a rich source for comparative genomics and other sorts of analyses.
 
 ```bash
 # view the short summary
