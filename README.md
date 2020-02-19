@@ -338,16 +338,16 @@ alternative tools: [NCBI PGA](https://www.ncbi.nlm.nih.gov/genbank/genomesubmit_
 ![gene_annotatoion](https://user-images.githubusercontent.com/18738632/42130642-bf1fb57e-7cb8-11e8-8472-37b82dadb53e.png)
 
 
-PROKKA does a lot, and is documented very well, so i will point you towards the course website and manual for more detailed information. It is a "rapid prokaryote genome annotation pipeline". Some of the relevant options include what genetic code your organism uses (standard is default), and what types of sequences you want to annotate (tRNA, rRNA, CDS).
+PROKKA does a lot! It is a "rapid prokaryote genome annotation pipeline" commonly used by many labs. Some of the relevant options include specifying which genetic code your organism uses (standard is default), and what types of sequences you want to annotate (tRNA, rRNA, CDS).
 
 * Run PROKKA
 
- **The input to the program is your contig FASTA file, the output is gene annotations in GFF (and other) formats, as well as FFN (nucleotide) and FAA (amino acid) FASTA sequence files for all the annotated sequences.** We will be using several of these files to investigate the genome content of our genome. What genes does it have? What do these gene code for?
+ **The input to the program is your contig FASTA file from SPAdes, the output is gene annotations in GFF (and other) formats, as well as FFN (nucleotide) and FAA (amino acid) FASTA sequence files for all the annotated sequences.** We will be using several of these files to investigate the genome content of our genome. What genes does it have? What do these gene code for?
  
 ```bash
-# look at the help menu.
+# look at the help menu
 prokka --help
-# run the script, specifying an output directory
+# run prokka - this may take a few minutes
 nohup prokka contigs.fasta --outdir prokka_output --cpus 24 --mincontiglen 200 &
 ```
 
@@ -355,10 +355,11 @@ nohup prokka contigs.fasta --outdir prokka_output --cpus 24 --mincontiglen 200 &
 ![prokka_output](https://user-images.githubusercontent.com/18738632/42244846-894db27e-7ee4-11e8-8fd2-2293f1a6309c.png)
 
 ```bash
-# list all the output files.
+# list the output files
 ls prokka_output
-# The GFF file contains the all the annotations and coordinates. It can be viewed in excel or with BASH. 
-# Extract all the products from the GFF (we made this command up in class)
+# The GFF file contains all the annotations and coordinates. Take a quick look using less but this file can also be downloaded and opened in Excel. 
+less -S prokka_output/PROKKA_*.gff
+# Extract all the products from the GFF
 # Copy this command to get a txt file with counts for each gene annotation.
 grep -o "product=.*" prokka_output/PROKKA_*.gff | sed 's/product=//g' | sort | uniq -c | sort -nr > protein_abundances.txt
 ```
