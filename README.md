@@ -504,6 +504,11 @@ grep -v '##' blob_taxonomy.blob_out.blobDB.table.txt
 # Plot the data
 blobtools plot --help
 blobtools plot -i blob_out.blobDB.json -r genus
+# move all the output files into a new folder to make it easier to download
+mkdir blob_files
+mv blob_out* blob_files/
+mv blob_tax* blob_files/
+ls blob_files
 ```
 The final table and plots can be exported to your computer to view. We will be using the table to decide which contigs to remove.
 
