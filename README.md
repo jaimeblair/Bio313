@@ -235,14 +235,14 @@ We are going to remove these unwanted files. **Remember if you delete a file usi
 ```bash
 # There are many ways to do this, proceed however you are comfortable. I am going to move the files I want to keep out of the directory, delete everything else in the directory with 'rm' then move my files back in. Alternatively you could just remove unwanted files one at a time.
 # Move into the spades directory
-cd spades_spades_assembly_default/
+cd spades_assembly/
 # move the files we want to keep back one directory
 mv contigs.fasta spades.log ../
 # confirm that the files moved!!!!!!!
 ls ../
-# confirm you are still in the spades_directory (I'm paranoid)
+# confirm you are still in the spades directory (I'm paranoid)
 pwd
-# you should see something like /home/GROUP/UserName/mdibl-t3-2018-WGS/spades_directory_default/
+# you should see something like /home/fandmJB/UserName/Bio313-WGS/spades_assembly
 # After you confirm the files have been moved and you are in the right directory, delete the unwanted files
 rm -r *
 # move the files back
@@ -259,20 +259,20 @@ Now that our initial SPAdes assembly is complete we can move on to genome assess
 ## Genome Structure Assessment w/ QUAST
 manual: http://quast.bioinf.spbau.ru/manual.html
 
-QUAST is a genome assembly assessment tool to look at the contiguity of a genome assembly, how well the genome was reconstructed. Did you get one contig representing your entire genome? Or did you get thousands of contigs representing a highly fragmented genome? Quast also gives us some useful information like how many base pairs our genome assembly is (total genome size).
+QUAST is a genome assembly assessment tool to look at the contiguity of a genome assembly, how well the genome was reconstructed. Did you get one contig representing your entire genome? Or did you get thousands of contigs representing a highly fragmented genome? QUAST also gives us some useful information like how many base pairs in our genome assembly (total genome size), contig N50 and L50, and the %GC of our genome (useful to know for some bacteria).
 
-QUAST has many functionalities which we will explore later on in the tutorial, for now we are going to use it in its simplest form. It essentially just keeps track of the length of each contig and provides basic statistics. This type of information is something you would typically provide in a publication or to assess different assemblers/options you may use. **The input to the program is the genome assembly FASTA and the output are various tables and a html/pdf you can export and view.**
+QUAST has many functionalities which we can explore later, for now we are going to use it in its simplest form. QUAST essentially just keeps track of the length of each contig and provides basic statistics. This type of information is something you would typically provide in a publication or to assess different assemblers/options you may use. **The input to the program is the genome assembly FASTA and the output are various tables and a html/pdf you can export and view.**
 
 * Run Quast
 ```bash
 # look at the usage
 quast.py --help
-# run the command
+# run the command - this runs pretty quickly
 quast.py contigs.fasta -o quast_results
 ```
 * View output files
 
-Most of the output files from QUAST contain the same information in different formats (tsv, txt, csv etc). Open up any of these files to see the output. Descriptions for each metric can be seen below. You can use the total assembly size in the coverage estimate from above.
+Most of the output files from QUAST contain the same information in different formats (tsv, txt, csv etc). I recommend moving the report.html file to your computer just like we did for the FastQC output above. Descriptions for each metric can be seen below. Now you can also better estimate sequencing coverage using the total assembly size from QUAST.
 
 ![quast_output](https://user-images.githubusercontent.com/18738632/42242349-8db09646-7edb-11e8-8c05-f4ba103c9201.png)
 
